@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
+using UnityEngine.UI;
 
 
 /// <summary>
@@ -14,6 +15,9 @@ using System.IO;
 /// </summary>
 public class AiManger1 : MonoBehaviour
 {
+    public TMP_Text DetectiveBlurb;
+    public GameObject GameCanvas;
+    public GameObject BlurbCanvas;
     [Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4o-mini";
     public string apiKey = "";
@@ -100,7 +104,7 @@ public class AiManger1 : MonoBehaviour
 "- Include red herrings: suspicious but potentially innocent actions, contradictory statements, or overlapping timelines that make the case harder to solve — this is important!\n" +
 "- Ensure that players must talk to every character to piece together a clear understanding of the murder.\n" +
 "- End with the body being discovered and the immediate tension and reactions, written from an external observer’s perspective." +
-"do NOT make it an argument between the victim and killer that ties them to the murder";
+"do NOT make it an argument between the victim and killer that ties them to the murder. and Do NOT make the characters given the victim make them a unique character";
 
 
 
@@ -124,8 +128,9 @@ public class AiManger1 : MonoBehaviour
             StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple and just the known facts" + sceneprompt, response =>
             {
                 OpeningBlurb = response;
-                Debug.Log(OpeningBlurb);
-                
+                DetectiveBlurb.text = OpeningBlurb; 
+
+
             }));
             StartCoroutine(DelayedAction());
         }));
@@ -367,6 +372,8 @@ public class AiManger1 : MonoBehaviour
                     {
                         npcPrompts["Rosa"] = response;
                         output.loading = false;
+                        GameCanvas.SetActive(true);
+                        BlurbCanvas.SetActive(false);
                     }));
                     break;
 
