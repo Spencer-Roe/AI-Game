@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 public class AiManger : MonoBehaviour
 {
     [Header("OpenAI Settings")]
-    [SerializeField] private string apiKey = "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";
+    [SerializeField] private string apiKey = "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";
     [SerializeField] private string model = "gpt-4o-mini";
 
     // Each NPC has its own conversation history
