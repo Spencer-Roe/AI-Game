@@ -17,6 +17,7 @@ public class AiManger1 : MonoBehaviour
     [Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4o-mini";
     public string apiKey = "";
+    public string killer = "";
     public dialog output;
     public TMP_InputField inputField;
     private string reply;
@@ -72,7 +73,7 @@ public class AiManger1 : MonoBehaviour
     {
         string[] characters = { "Evelyn", "Marcus", "Daniel", "Rosa" };
         int rand = UnityEngine.Random.Range(0, characters.Length);
-        string killer = characters[rand];
+        killer = characters[rand];
         Debug.Log(killer);
 
         sceneprompt =
