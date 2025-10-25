@@ -82,7 +82,6 @@ public class AiManger1 : MonoBehaviour
         return null;
     }
 
-    // Replace your Start() with this (load API KEY first, then call scene generation)
     public void Start()
     {
         apiKey = LoadApiKeyFromEnv();
@@ -91,7 +90,12 @@ public class AiManger1 : MonoBehaviour
             throw new Exception("OpenAI API key missing! Please set it in your .env file.");
 
         // Generate the scene first (this is a single-shot request), then start the delayed generation of profiles
-       
+        StartCoroutine(SendMessageToGPT(sceneprompt, response =>
+        {
+            sceneprompt = string.IsNullOrWhiteSpace(response) ? sceneprompt : response.Trim();
+            // start delayed profile generation after we have the scene
+            StartCoroutine(DelayedAction());
+        }));
     }
 
 
@@ -207,4 +211,134 @@ public class AiManger1 : MonoBehaviour
             ? npcConversations[npcName]
             : new List<JObject>();
     }
+
+    public IEnumerator SendMessageToGPT(string userMessage, System.Action<string> onResponse)
+    {
+        yield return new WaitForSeconds(2);
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            Debug.LogError("API key missing!");
+            yield break;
+        }
+
+        // Build the request body
+        var jsonBody = new JObject
+        {
+            ["model"] = model,
+            ["messages"] = new JArray
+            {
+                new JObject
+                {
+                    ["role"] = "user",
+                    ["content"] = userMessage
+                }
+            }
+        };
+
+        var request = new UnityWebRequest("https://api.openai.com/v1/chat/completions", "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonBody.ToString());
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + apiKey);
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            try
+            {
+                var responseJson = JObject.Parse(request.downloadHandler.text);
+                string reply = responseJson["choices"]?[0]?["message"]?["content"]?.ToString();
+
+                if (!string.IsNullOrEmpty(reply))
+                {
+                    // Debug.Log("GPT Reply: " + reply);
+                    onResponse?.Invoke(reply);
+                }
+                else
+                {
+                    Debug.LogWarning("GPT returned an empty response.");
+                    onResponse?.Invoke(string.Empty);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Failed to parse GPT response: " + e.Message);
+                onResponse?.Invoke(string.Empty);
+            }
+        }
+        else
+        {
+            Debug.LogError($"GPT request failed: {request.error}");
+            onResponse?.Invoke(string.Empty);
+        }
+    }
+
+    IEnumerator DelayedAction()
+    {
+        yield return new WaitForSeconds(7);
+
+        for (int i = 0; i < 4; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    Debug.Log(sceneprompt);
+                    StartCoroutine(SendMessageToGPT(
+                    "Create a new character description for Evelyn Carter based entirely on the following scene." +
+                    "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
+                    "\nFormat the response exactly like this example:" +
+                    " " + npcPrompts["Evelyn"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
+                    "\n\nScene:\n" + sceneprompt, response =>
+                    {
+                        npcPrompts["Evelyn"] = response;
+                        Debug.Log(npcPrompts["Evelyn"]);
+
+                    }));
+                    break;
+                case 1:
+                    StartCoroutine(SendMessageToGPT(
+                    "Create a new character description for Marcus based entirely on the following scene." +
+                    "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
+                    "\nFormat the response exactly like this example:" +
+                    " " + npcPrompts["Marcus"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
+                    "\n\nScene:\n" + sceneprompt, response =>
+                    {
+                        npcPrompts["Marcus"] = response;
+
+                    }));
+                    break;
+                case 2:
+                    StartCoroutine(SendMessageToGPT(
+                    "Create a new character description for Daniel based entirely on the following scene." +
+                    "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
+                    "\nFormat the response exactly like this example:" +
+                    " " + npcPrompts["Daniel"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
+                    "\n\nScene:\n" + sceneprompt, response =>
+                    {
+                        npcPrompts["Daniel"] = response;
+
+                    }));
+                    break;
+                case 3:
+                    StartCoroutine(SendMessageToGPT(
+                    "Create a new character description for Rosa based entirely on the following scene." +
+                    "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
+                    "\nFormat the response exactly like this example:" +
+                    " " + npcPrompts["Rosa"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
+                    "\n\nScene:\n" + sceneprompt, response =>
+                    {
+                        npcPrompts["Rosa"] = response;
+
+                    }));
+                    break;
+
+            }
+        }
+
+    }
+
+
+
 }
