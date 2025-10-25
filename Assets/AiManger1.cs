@@ -16,8 +16,7 @@ using UnityEngine.UI;
 public class AiManger1 : MonoBehaviour
 {
     public TMP_Text DetectiveBlurb;
-    public GameObject GameCanvas;
-    public GameObject BlurbCanvas;
+    public GameObject StartButton;
     [Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4o-mini";
     public string apiKey = "";
@@ -318,7 +317,7 @@ public class AiManger1 : MonoBehaviour
     {
         output.loading = true;
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1f);
 
         for (int i = 0; i < 4; i++)
         {
@@ -372,8 +371,8 @@ public class AiManger1 : MonoBehaviour
                     {
                         npcPrompts["Rosa"] = response;
                         output.loading = false;
-                        GameCanvas.SetActive(true);
-                        BlurbCanvas.SetActive(false);
+                        StartButton.SetActive(true);
+                        
                     }));
                     break;
 
