@@ -73,15 +73,15 @@ public class AiManger1 : MonoBehaviour
         string[] characters = { "Evelyn", "Marcus", "Daniel", "Rosa" };
         int rand = UnityEngine.Random.Range(0, characters.Length);
         string killer = characters[rand];
-
+        Debug.Log(killer);
 
         sceneprompt =
        "Write a detailed but concise murder mystery scene featuring these four predetermined characters:\n\n" +
        "Make" + killer + "the killer " +
        "Evelyn Carter – 36, art dealer. Elegant, slightly defensive, quick with sarcasm. Habitual phrase: 'Well, obviously.'\n" +
-       "Marcus Reed – 48, groundskeeper. Gruff, stoic, blunt; speaks plainly. Habitual phrase: 'I'll tell you straight.'\n" +
-       "Daniel Hayes – 42, defense attorney. Confident, articulate, occasionally sharp-tongued. Habitual phrase: 'To be frank.'\n" +
-       "Rosa Alvarez – 28, server and part-time housekeeper. Warm, observant, soft-spoken. Habitual phrase: 'Honestly.'\n\n" +
+       "Marcus Reed – 48, groundskeeper. Gruff, stoic, blunt; speaks plainly.'\n" +
+       "Daniel Hayes – 42, defense attorney. Confident, articulate, occasionally sharp-tongued.'\n" +
+       "Rosa Alvarez – 28, server and part-time housekeeper. Warm, observant, soft-spoken. '\n\n" +
        "Create a victim and a connection from the characters to said victum. Do NOT include a detective or a solution.\n\n" +
        "Describe the following clearly and factually:\n" +
        "- The time of the murder (between 8:30 PM and 9:10 PM).\n" +
@@ -135,7 +135,7 @@ public class AiManger1 : MonoBehaviour
                 ? npcPrompts[npcName]
                 : $"You are {npcName}, a resident of the island hospital. Stay in character.";
 
-            string fullPrompt = scenarioContext + "\n" + characterPrompt;
+            string fullPrompt = scenarioContext + "\n" + sceneprompt + "\n" + characterPrompt;
 
             npcConversations[npcName].Add(new JObject
             {
@@ -306,7 +306,7 @@ public class AiManger1 : MonoBehaviour
                     StartCoroutine(SendMessageToGPT(
                     "Create a new character description for Evelyn Carter based entirely on the following scene." +
                     "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
-                    "\nFormat the response exactly like this example:" +
+                    "\nFormat the response similar to this example but not with the same events:" +
                     " " + npcPrompts["Evelyn"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
                     "\n\nScene:\n" + sceneprompt, response =>
                     {
