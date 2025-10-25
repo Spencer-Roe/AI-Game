@@ -15,7 +15,7 @@ public class enter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(dialog.loading);
+        //Debug.Log(dialog.loading);
         if (dialog.loading == true)
         {
             DisableAllButtons();
