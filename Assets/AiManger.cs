@@ -5,13 +5,11 @@ using UnityEngine.Networking;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System;
-using System;
+
 using System.IO;
 
 
-/// <summary>
-/// Manages per-NPC conversations with OpenAI GPT models.
-/// </summary>
+
 public class AiManger : MonoBehaviour
 {
 
