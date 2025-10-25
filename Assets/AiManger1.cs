@@ -73,6 +73,7 @@ public class AiManger1 : MonoBehaviour
         return null;
     }
     string sceneprompt;
+    string OpeningBlurb;
      public void Start()
     {
         output.loading = true;
@@ -120,6 +121,12 @@ public class AiManger1 : MonoBehaviour
         {
             sceneprompt = string.IsNullOrWhiteSpace(response) ? sceneprompt : response.Trim();
             // start delayed profile generation after we have the scene
+            StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple and just the known facts" + sceneprompt, response =>
+            {
+                OpeningBlurb = response;
+                Debug.Log(OpeningBlurb);
+                
+            }));
             StartCoroutine(DelayedAction());
         }));
     }
@@ -141,9 +148,9 @@ public class AiManger1 : MonoBehaviour
         {
             string characterPrompt = npcPrompts.ContainsKey(npcName)
                 ? npcPrompts[npcName]
-                : $"You are {npcName}, a resident of the island hospital. Stay in character.";
+                : "";
 
-            string fullPrompt = scenarioContext + "\n" + sceneprompt + "\n" + characterPrompt;
+            string fullPrompt = scenarioContext + "\n" + sceneprompt + "\n" + characterPrompt + " use te sceneprompt as a guide for your responces";
 
             npcConversations[npcName].Add(new JObject
             {
