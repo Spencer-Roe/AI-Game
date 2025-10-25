@@ -92,11 +92,11 @@ public class AiManger1 : MonoBehaviour
 "Create a victim and describe how each character is connected to that victim. Do NOT include a detective or a solution.\n" +
 "Do NOT include any direct arguments, shouting, or confrontations between the killer and the victim. Their relationship should appear normal, tense, or distant — but not openly hostile. Focus on subtle tension or hidden motives instead of obvious conflict.\n\n" +
 "Describe the following clearly and factually:\n" +
-"- The time of the murder (between 8:30 PM and 9:10 PM).\n" +
-"- The exact location (e.g., study, garden, terrace) and environmental details (sounds, lighting, smells, temperature).\n" +
+"- The time of the murder ().\n" +
+"- The exact location () and environmental details (sounds, lighting, smells, temperature).\n" +
 "- What each character was doing 10 minutes before, during, and immediately after the murder.\n" +
 "- At least one specific sensory clue each character noticed (a smell, sound, or sight) that could help an investigation — make it unique to each character.\n" +
-"- At least one interaction or observed behavior linking two or more characters, but allow conflicting or unclear recollections (for example, someone saw a shadow but can’t be sure who).\n" +
+"- At least one interaction or observed behavior linking two or more characters, but allow conflicting or unclear recollections ).\n" +
 "- Include red herrings: suspicious but potentially innocent actions, contradictory statements, or overlapping timelines that make the case harder to solve — this is important!\n" +
 "- Ensure that players must talk to every character to piece together a clear understanding of the murder.\n" +
 "- End with the body being discovered and the immediate tension and reactions, written from an external observer’s perspective." +
