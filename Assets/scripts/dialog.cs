@@ -5,22 +5,23 @@ using TMPro;
 public class dialog : MonoBehaviour
 {
     public TextMeshProUGUI textcomp;
-    public string[] lines;
+    public string lines;
     public float speed; 
     private int index;
     private void Start()
     {
         textcomp.text = string.Empty;
-        startDialoge();
+        //startDialoge();
     }
-    void startDialoge()
+    public void startDialoge(string line)
     {
-        index = 0;
+        textcomp.text = "";
+        lines = line;
         StartCoroutine(TypeLine());
     }
     IEnumerator TypeLine()
     {
-        foreach (char c in lines[index].ToCharArray())
+        foreach (char c in lines.ToCharArray())
         {
             textcomp.text += c;
             yield return new WaitForSeconds(speed);
