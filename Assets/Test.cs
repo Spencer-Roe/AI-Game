@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Test : MonoBehaviour
 {
@@ -6,6 +7,18 @@ public class Test : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(TestAPI());
+
+        
+    }
+    private void Update()
+    {
+        
+    }
+    IEnumerator TestAPI()
+    {
+        
+        yield return new WaitForSeconds(3f); // Wait 3 seconds
         // Example: Send message to NPC "Bob"
         StartCoroutine(dialogueManager.SendNPCMessage("Bob", "Hey Bob, how’s the smuggling operation going?", (reply) =>
         {
@@ -23,9 +36,6 @@ public class Test : MonoBehaviour
         {
             Debug.Log("Clara says: " + reply);
         }));
-    }
-    private void Update()
-    {
-        
+
     }
 }

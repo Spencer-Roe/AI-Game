@@ -14,7 +14,7 @@ public class AiManger : MonoBehaviour
 {
 
 
-string apiKey = null;
+public string apiKey = null;
 
     public void Start()
     {
@@ -23,7 +23,9 @@ string apiKey = null;
             if (line.StartsWith("OPENAI_API_KEY="))
             {
                 apiKey = line.Split('=')[1].Trim();
+                Debug.Log(apiKey);
                 break;
+                
             }
         }
 
