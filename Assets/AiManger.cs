@@ -12,6 +12,7 @@ using System.IO;
 
 public class AiManger : MonoBehaviour
 {
+<<<<<<< HEAD
 
 string apiKey = null;
 
@@ -32,6 +33,10 @@ string apiKey = null;
 
 
 [Header("OpenAI Settings")]
+=======
+    [Header("OpenAI Settings")]
+    [SerializeField] private string apiKey = "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";
+>>>>>>> parent of 95c9531 (Update AiManger.cs)
     [SerializeField] private string model = "gpt-4o-mini";
 
     // Each NPC has its own conversation history
