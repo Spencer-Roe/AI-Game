@@ -1,8 +1,11 @@
 using UnityEngine;
-
+using UnityEngine.UIElements;
+using UnityEngine.UI;
+using UnityEditor.Build.Reporting;
 public class enter : MonoBehaviour
 {
     public AiManger1 aimanger1;
+    public dialog dialog;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,10 +15,41 @@ public class enter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        Debug.Log(dialog.loading);
+        if (dialog.loading == true)
+        {
+            DisableAllButtons();
+        }
+        else
+        {
+            EnableAllButtons();
+        }
+        if (Input.GetKeyDown(KeyCode.Return) && dialog.loading == false)
         {
             aimanger1.message();
 
+        }
+        
+    }
+    public void DisableAllButtons()
+    {
+
+        // Option 1: Find all buttons in the entire scene
+        UnityEngine.UI.Button[] allButtons = Object.FindObjectsByType<UnityEngine.UI.Button>(FindObjectsSortMode.None);
+        foreach (UnityEngine.UI.Button button in allButtons)
+        {
+            button.interactable = false;
+        }
+
+
+    }
+
+    public void EnableAllButtons()
+    {
+        UnityEngine.UI.Button[] allButtons = Object.FindObjectsByType<UnityEngine.UI.Button>(FindObjectsSortMode.None);
+        foreach (UnityEngine.UI.Button button in allButtons)
+        {
+            button.interactable = true;
         }
     }
 }

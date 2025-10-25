@@ -71,6 +71,7 @@ public class AiManger1 : MonoBehaviour
     string sceneprompt;
      public void Start()
     {
+        output.loading = true;
         string[] characters = { "Evelyn", "Marcus", "Daniel", "Rosa" };
         int rand = UnityEngine.Random.Range(0, characters.Length);
         killer = characters[rand];
@@ -88,9 +89,11 @@ public class AiManger1 : MonoBehaviour
        "- The time of the murder (between 8:30 PM and 9:10 PM).\n" +
        "- The exact location (e.g., study, garden, terrace) and environmental details (sounds, lighting, smells, temperature).\n" +
        "- What each character was doing 10 minutes before, during, and immediately after the murder.\n" +
-       "- At least one specific sensory clue each character noticed (a smell, sound, or sight) that could help an investigation.\n" +
+       "- At least one specific sensory clue each character noticed (a smell, sound, or sight) that could help an investigation. Make it unique to each character!\n" +
        "- At least one interaction or observed behavior linking two or more characters — but allow conflicting or unclear recollections (e.g., someone saw a shadow, but can’t be sure who).\n" +
-       "- Include red herrings: suspicious but potentially innocent actions, contradictory statements, or overlapping timelines that make the case harder to solve.\n" +
+       "- Include red herrings: suspicious but potentially innocent actions, contradictory statements, or overlapping timelines that make the case harder to solve - this is important!!!\n" +
+       "- You should have to talk to every character before getting a clear understanding of the murder\n"+
+       "- Make the killer a convincing liar, and allow them to get caught up in their lies\n"+
        "- End with the body being discovered and the immediate tension and reactions — written from an external observer’s perspective.";
 
 
@@ -188,7 +191,6 @@ public class AiManger1 : MonoBehaviour
                     Debug.Log("hi" + reply);
                     output.startDialoge(reply);
                     Debug.Log("hashfdl" + reply);
-
                 }
             }
             catch (System.Exception e)
@@ -204,10 +206,12 @@ public class AiManger1 : MonoBehaviour
     }
     public void message()
     {
+
         StartCoroutine(SendNPCMessage(character.characterName, inputField.text));
     }
     public void message2(string input)
     {
+
         StartCoroutine(SendNPCMessage(character.characterName, input));
     }
     /// <summary>
@@ -296,6 +300,8 @@ public class AiManger1 : MonoBehaviour
 
     IEnumerator DelayedAction()
     {
+        output.loading = true;
+
         yield return new WaitForSeconds(7);
 
         for (int i = 0; i < 4; i++)
@@ -355,6 +361,7 @@ public class AiManger1 : MonoBehaviour
 
             }
         }
+        output.loading = false;
 
     }
 

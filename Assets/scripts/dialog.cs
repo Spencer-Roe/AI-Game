@@ -8,6 +8,7 @@ public class dialog : MonoBehaviour
     public string lines;
     public float speed; 
     private int index;
+    public bool loading = false;
     private void Start()
     {
         textcomp.text = string.Empty;
@@ -21,12 +22,14 @@ public class dialog : MonoBehaviour
     }
     IEnumerator TypeLine()
     {
+       loading = true;
         foreach (char c in lines.ToCharArray())
         {
             textcomp.text += c;
             yield return new WaitForSeconds(speed);
 
         }
+        loading = false;
     }
 
   
