@@ -1,41 +1,49 @@
 using UnityEngine;
+using TMPro;
 using System.Collections;
 
 public class Test : MonoBehaviour
 {
     public AiManger dialogueManager;
+    public TMP_InputField messageInput;   // Reference to Input Field
+   
 
-    void Start()
+    private bool isWaitingForReply = false;
+
+    public void SendFromInput()
     {
-        StartCoroutine(TestAPI());
+        if (isWaitingForReply)
+        {
+            AppendChat("System", " Waiting for Evelyn’s reply...");
+            return;
+        }
 
-        
+        string playerMessage = messageInput.text.Trim();
+        if (string.IsNullOrEmpty(playerMessage))
+            return;
+
+        messageInput.text = ""; // Clear input field
+        StartCoroutine(SendMessageToBob(playerMessage));
     }
-    private void Update()
+
+    private IEnumerator SendMessageToBob(string message)
     {
-        
+        isWaitingForReply = true;
+
+        AppendChat("You", message);
+
+        // Send message to GPT through AiManager
+        yield return StartCoroutine(dialogueManager.SendNPCMessage("Evelyn", message, (reply) =>
+        {
+            AppendChat("Evelyn", reply);
+        }));
+
+        isWaitingForReply = false;
     }
-    IEnumerator TestAPI()
+
+    private void AppendChat(string speaker, string text)
     {
         
-        yield return new WaitForSeconds(3f); // Wait 3 seconds
-        // Example: Send message to NPC "Bob"
-        StartCoroutine(dialogueManager.SendNPCMessage("Bob", "Hey Bob, how’s the smuggling operation going?", (reply) =>
-        {
-            Debug.Log("NPC replied: " + reply);
-        }));
-
-        // Example: Send another message to the same NPC (keeps conversation memory)
-        StartCoroutine(dialogueManager.SendNPCMessage("Bob", "Tell me more about your boss.", (reply) =>
-        {
-            Debug.Log("NPC replied: " + reply);
-        }));
-
-        // Example: Talk to a different NPC
-        StartCoroutine(dialogueManager.SendNPCMessage("Clara", "Hey Clara, what do you know about Bob?", (reply) =>
-        {
-            Debug.Log("Clara says: " + reply);
-        }));
-
+            Debug.Log($"{speaker}: {text}");
     }
 }
