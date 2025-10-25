@@ -30,12 +30,12 @@ public class Test : MonoBehaviour
     {
         isWaitingForReply = true;
 
-        AppendChat("You", message);
+        //AppendChat("You", message);
 
         // Send message to GPT through AiManager
         yield return StartCoroutine(dialogueManager.SendNPCMessage("Evelyn", message, (reply) =>
         {
-            AppendChat("Evelyn", reply);
+            Debug.Log(reply);
         }));
 
         isWaitingForReply = false;
@@ -44,6 +44,6 @@ public class Test : MonoBehaviour
     private void AppendChat(string speaker, string text)
     {
         
-            Debug.Log($"{speaker}: {text}");
+            //Debug.Log($"{speaker}: {text}");
     }
 }

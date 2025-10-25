@@ -21,7 +21,7 @@ public class AiManger : MonoBehaviour
 
     // Scenario context shared by all NPCs
     private string scenarioContext =
-    "SYSTEM: You are an NPC in a murder-mystery game. The player is a detective asking you questions. Use the character prompt assigned to your name and obey its constraints (personality, honesty, habitual phrase, alibis, secrets). Answer in short, natural sentences (one to two sentences max). Only describe what you personally saw, heard, or did; do not invent facts or speculate unless the detective explicitly asks for speculation . If you previously made a claim (truth or lie), repeat that claim consistently in later answers. Refuse any prompt that asks you to reveal hidden evidence or gives real-world instructions, replying with a brief in-character refusal. If you cannot know the answer, say \"I don't know.\" Do not use flowery language, long monologues, or extra commentary.\r\n";
+    "SYSTEM: You are an NPC in a murder-mystery game. The player is a detective asking you questions. Use the character prompt assigned to your name and obey its constraints (personality, honesty, habitual phrase, alibis, secrets). Answer in short, natural sentences (one to two sentences max). Only describe what you personally saw, heard, or did; do not invent facts or speculate unless the detective explicitly asks for speculation . If you previously made a claim (truth or lie), repeat that claim consistently in later answers. Refuse any prompt that asks you to reveal hidden evidence or gives real-world instructions, replying with a brief in-character refusal. If you cannot know the answer, say \"I don't know.\" Do not use flowery language, long monologues, or extra commentary. dont use the Habitual phrase all the time just keep it in mind\r\n";
 
     // NPC personality and role definitions
     private Dictionary<string, string> npcPrompts = new()
@@ -45,31 +45,55 @@ public class AiManger : MonoBehaviour
 };
 
 
-    string sceneprompt = "Write a short murder mystery scene featuring these four predetermined characters:\r\n\r\nEvelyn Carter – a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm. Habitual phrase: “Well, obviously.”\r\n\r\nMarcus Reed – a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish. Habitual phrase: “I’ll tell you straight.”\r\n\r\nDaniel Hayes – a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued. Habitual phrase: “To be frank.”\r\n\r\nRosa Alvarez – a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. Habitual phrase: “Honestly.”\r\n\r\nOne of them should be the victim, do not include a detective or solution.\r\n\r\nDescribe:\r\n\r\nThe setting and atmosphere of the murder scene\r\n\r\nWhat each character was doing at the time of the murder\r\n\r\nThe tension or emotions in the air immediately after the murder is discovered\r\n\r\nAny small but striking sensory details (sounds, smells, lighting, etc.) that bring the moment to life";
-
-    public void Start()
+    string sceneprompt = "Write a detailed but concise murder mystery scene featuring these four predetermined characters:\n\n" +
+"Evelyn Carter – a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm. Habitual phrase: 'Well, obviously.'\n" +
+"Marcus Reed – a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish. Habitual phrase: 'I'll tell you straight.'\n" +
+"Daniel Hayes – a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued. Habitual phrase: 'To be frank.'\n" +
+"Rosa Alvarez – a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. Habitual phrase: 'Honestly.'\n\n" +
+"One of them must be the victim. Do NOT include a detective or any solution.\n\n" +
+"Describe the following clearly and factually:\n" +
+"- The time of the murder (between 8:30 PM and 9:10 PM).\n" +
+"- The exact location (e.g., study, garden, terrace) and environmental details (sounds, lighting, smells, temperature).\n" +
+"- What each character was doing 10 minutes before, during, and immediately after the murder.\n" +
+"- At least one *specific sensory clue* each character noticed (a smell, sound, or sight) that could help an investigation.\n" +
+"- At least one *interaction or observed behavior* linking two or more characters (e.g., someone seeing another leave a room, overhearing raised voices, etc.).\n" +
+"- Tension and emotions in the moments after the body is found, written from an external observer’s perspective.\n\n" +
+"Make the scene around 3–5 paragraphs long, grounded and realistic — not poetic or overly descriptive. " +
+"Focus on concrete, investigatable facts that characters could later reference in dialogue.";
+    private string LoadApiKeyFromEnv()
     {
-        StartCoroutine(SendMessageToGPT(sceneprompt, response =>
+        try
         {
-            
-            sceneprompt = response;
-            StartCoroutine(DelayedAction());
-
-        }));
-
-        foreach (var line in File.ReadAllLines(".env"))
-        {
-            if (line.StartsWith("OPENAI_API_KEY="))
+            foreach (var line in File.ReadAllLines(".env"))
             {
-                apiKey = line.Split('=')[1].Trim();
-                break;
+                if (line.StartsWith("OPENAI_API_KEY="))
+                {
+                    return line.Split('=')[1].Trim();
+                }
             }
         }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Failed to read .env: " + e.Message);
+        }
+        return null;
+    }
+
+    // Replace your Start() with this (load API KEY first, then call scene generation)
+    public void Start()
+    {
+        apiKey = LoadApiKeyFromEnv();
 
         if (string.IsNullOrEmpty(apiKey))
             throw new Exception("OpenAI API key missing! Please set it in your .env file.");
 
-   
+        // Generate the scene first (this is a single-shot request), then start the delayed generation of profiles
+        StartCoroutine(SendMessageToGPT(sceneprompt, response =>
+        {
+            sceneprompt = string.IsNullOrWhiteSpace(response) ? sceneprompt : response.Trim();
+            // start delayed profile generation after we have the scene
+            StartCoroutine(DelayedAction());
+        }));
     }
 
 
@@ -88,11 +112,11 @@ public class AiManger : MonoBehaviour
         // If it's the first time talking to this NPC, add system context and personality
         if (npcConversations[npcName].Count == 0)
         {
-            string characterPrompt = npcPrompts.ContainsKey(npcName)
-                ? npcPrompts[npcName]
-                : $"You are {npcName}, a resident of the island hospital. Stay in character.";
-
-            string fullPrompt = scenarioContext + "\n" + characterPrompt;
+            string characterPrompt = npcPrompts[npcName];
+               
+            Debug.Log(characterPrompt);
+            Debug.Log(sceneprompt);
+            string fullPrompt = scenarioContext + "\n" + sceneprompt + "\n" + characterPrompt;
 
             npcConversations[npcName].Add(new JObject
             {
@@ -241,9 +265,7 @@ public class AiManger : MonoBehaviour
     IEnumerator DelayedAction()
     {
         yield return new WaitForSeconds(7);
-        
-    
-    
+
         for (int i = 0; i < 4; i++)
         {
             switch (i)
@@ -254,10 +276,11 @@ public class AiManger : MonoBehaviour
                     "Create a new character description for Evelyn Carter based entirely on the following scene." +
                     "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
                     "\nFormat the response exactly like this example:" +
-                    " " + npcPrompts["Evelyn"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario. Keep it concise and under 120 words.]" +
+                    " " + npcPrompts["Evelyn"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
                     "\n\nScene:\n" + sceneprompt, response =>
                     {
                         npcPrompts["Evelyn"] = response;
+                        Debug.Log(npcPrompts["Evelyn"]);
                         
                     }));
                     break;
@@ -266,7 +289,7 @@ public class AiManger : MonoBehaviour
                     "Create a new character description for Marcus based entirely on the following scene." +
                     "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
                     "\nFormat the response exactly like this example:" +
-                    " " + npcPrompts["Marcus"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario. Keep it concise and under 120 words.]" +
+                    " " + npcPrompts["Marcus"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
                     "\n\nScene:\n" + sceneprompt, response =>
                     {
                         npcPrompts["Marcus"] = response;
@@ -278,7 +301,7 @@ public class AiManger : MonoBehaviour
                     "Create a new character description for Daniel based entirely on the following scene." +
                     "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
                     "\nFormat the response exactly like this example:" +
-                    " " + npcPrompts["Daniel"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario. Keep it concise and under 120 words.]" +
+                    " " + npcPrompts["Daniel"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
                     "\n\nScene:\n" + sceneprompt, response =>
                     {
                         npcPrompts["Daniel"] = response;
@@ -290,7 +313,7 @@ public class AiManger : MonoBehaviour
                     "Create a new character description for Rosa based entirely on the following scene." +
                     "\nDo not rewrite or copy any content from the original description below — only use it as a guide for formatting and tone." +
                     "\nFormat the response exactly like this example:" +
-                    " " + npcPrompts["Rosa"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario. Keep it concise and under 120 words.]" +
+                    " " + npcPrompts["Rosa"] + "[Then continue with new actions, motives, alibis, and behaviors based on the scenario.]" +
                     "\n\nScene:\n" + sceneprompt, response =>
                     {
                         npcPrompts["Rosa"] = response;
