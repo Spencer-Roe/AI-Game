@@ -6,6 +6,8 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.IO;
+
 
 /// <summary>
 /// Manages per-NPC conversations with OpenAI GPT models.
@@ -14,7 +16,7 @@ public class AiManger1 : MonoBehaviour
 {
     [Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4o-mini";
-
+    public string apiKey = "";
     public dialog output;
     public TMP_InputField inputField;
     private string reply;
@@ -25,7 +27,6 @@ public class AiManger1 : MonoBehaviour
     private string scenarioContext =
     "SYSTEM: You are an NPC in a murder-mystery game. The player is a detective asking you questions. Use the character prompt assigned to your name and obey its constraints (personality, honesty, habitual phrase, alibis, secrets). Answer in short, natural sentences (one to two sentences max). Only describe what you personally saw, heard, or did; do not invent facts or speculate unless the detective explicitly asks for speculation . If you previously made a claim (truth or lie), repeat that claim consistently in later answers. Refuse any prompt that asks you to reveal hidden evidence or gives real-world instructions, replying with a brief in-character refusal. If you cannot know the answer, say \"I don't know.\" Do not use flowery language, long monologues, or extra commentary.\r\n";
 
-    // NPC personality and role definitions
     private Dictionary<string, string> npcPrompts = new()
 {
     {
@@ -45,22 +46,55 @@ public class AiManger1 : MonoBehaviour
         "You are Rosa Alvarez, a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. Habitual phrase: 'Honestly.' Honesty: 0.85 (very truthful). You were cleaning near the study around 9:00 PM, saw Marcus leaving at 9:05 PM, and spotted Evelyn on the terrace shortly after. You’re unsure about exact times but recall small visual details—a smear on the doorknob, footsteps in the corridor. You want to keep your job and avoid trouble. Speak plainly, with gentle hesitations when uncertain ('I think', 'maybe'). Keep responses under 30 words and focused only on what you actually saw or heard."
     }
 };
-    string sceneprompt = "Write a short murder mystery scene featuring these four predetermined characters:\r\n\r\nEvelyn Carter – a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm. Habitual phrase: “Well, obviously.”\r\n\r\nMarcus Reed – a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish. Habitual phrase: “I’ll tell you straight.”\r\n\r\nDaniel Hayes – a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued. Habitual phrase: “To be frank.”\r\n\r\nRosa Alvarez – a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. Habitual phrase: “Honestly.”\r\n\r\nOne of them should be the victim, do not include a detective or solution.\r\n\r\nDescribe:\r\n\r\nThe setting and atmosphere of the murder scene\r\n\r\nWhat each character was doing at the time of the murder\r\n\r\nThe tension or emotions in the air immediately after the murder is discovered\r\n\r\nAny small but striking sensory details (sounds, smells, lighting, etc.) that bring the moment to life";
 
-    /// <summary>
-    /// Send a message from a given NPC and get GPT's response.
-    /// </summary>
+
+    string sceneprompt = "Write a detailed but concise murder mystery scene featuring these four predetermined characters:\n\n" +
+"Evelyn Carter – a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm. Habitual phrase: 'Well, obviously.'\n" +
+"Marcus Reed – a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish. Habitual phrase: 'I'll tell you straight.'\n" +
+"Daniel Hayes – a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued. Habitual phrase: 'To be frank.'\n" +
+"Rosa Alvarez – a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. Habitual phrase: 'Honestly.'\n\n" +
+"One of them must be the victim. Do NOT include a detective or any solution.\n\n" +
+"Describe the following clearly and factually:\n" +
+"- The time of the murder (between 8:30 PM and 9:10 PM).\n" +
+"- The exact location (e.g., study, garden, terrace) and environmental details (sounds, lighting, smells, temperature).\n" +
+"- What each character was doing 10 minutes before, during, and immediately after the murder.\n" +
+"- At least one *specific sensory clue* each character noticed (a smell, sound, or sight) that could help an investigation.\n" +
+"- At least one *interaction or observed behavior* linking two or more characters (e.g., someone seeing another leave a room, overhearing raised voices, etc.).\n" +
+"- Tension and emotions in the moments after the body is found, written from an external observer’s perspective.\n\n" +
+"Make the scene around 3–5 paragraphs long, grounded and realistic — not poetic or overly descriptive. " +
+"Focus on concrete, investigatable facts that characters could later reference in dialogue.";
+    private string LoadApiKeyFromEnv()
+    {
+        try
+        {
+            foreach (var line in File.ReadAllLines(".env"))
+            {
+                if (line.StartsWith("OPENAI_API_KEY="))
+                {
+                    return line.Split('=')[1].Trim();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("Failed to read .env: " + e.Message);
+        }
+        return null;
+    }
+
+    // Replace your Start() with this (load API KEY first, then call scene generation)
     public void Start()
     {
-        
-
-     
+        apiKey = LoadApiKeyFromEnv();
 
         if (string.IsNullOrEmpty(apiKey))
             throw new Exception("OpenAI API key missing! Please set it in your .env file.");
 
-
+        // Generate the scene first (this is a single-shot request), then start the delayed generation of profiles
+       
     }
+
+
     public IEnumerator SendNPCMessage(string npcName, string playerMessage)
     {
         if (string.IsNullOrEmpty(apiKey))
