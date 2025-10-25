@@ -10,7 +10,10 @@ public class characters : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Evelyn();
+        characterName = "Evelyn";
+
+        nameText.text = characterName;
+
     }
 
     // Update is called once per frame
