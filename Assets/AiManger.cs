@@ -4,14 +4,36 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System;
+using System;
+using System.IO;
+
 
 /// <summary>
 /// Manages per-NPC conversations with OpenAI GPT models.
 /// </summary>
 public class AiManger : MonoBehaviour
 {
-    [Header("OpenAI Settings")]
-    [SerializeField] private string apiKey = "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";
+
+string apiKey = null;
+
+    public void Start()
+    {
+        foreach (var line in File.ReadAllLines(".env"))
+        {
+            if (line.StartsWith("OPENAI_API_KEY="))
+            {
+                apiKey = line.Split('=')[1].Trim();
+                break;
+            }
+        }
+
+        if (string.IsNullOrEmpty(apiKey))
+            throw new Exception("OpenAI API key missing! Please set it in your .env file.");
+    }
+
+
+[Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4o-mini";
 
     // Each NPC has its own conversation history

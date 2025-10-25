@@ -28,6 +28,11 @@
 # Visual Studio cache directory
 .vs/
 
+.env
+config.json
+
+
+
 # Gradle cache directory
 .gradle/
 
