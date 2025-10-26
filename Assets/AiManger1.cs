@@ -309,9 +309,10 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
     public void reason()
     {     
             // start delayed profile generation after we have the scene
-            StartCoroutine(SendMessageToGPT("This is the end of the game! have the killer explain their motive in their own words in 2 sentences or less", response =>
+            StartCoroutine(SendMessageToGPT("This is the context: \""+sceneprompt+"\"Now, this is the end of the game! have the killer explain their motive in their own words in 2 sentences or less based on This" + npcPrompts[killer], response =>
             {
                 output2.startDialoge(response);
+                
 
             }));
     }
@@ -369,6 +370,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
             {
                 Debug.LogError("Failed to parse GPT response: " + e.Message);
                 onResponse?.Invoke(string.Empty);
+               
             }
         }
         else
@@ -440,6 +442,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
                         output.loading = false;
                         StartButton.SetActive(true);
                         wait.SetActive(false);
+                        
                     }));
                     break;
 
