@@ -309,7 +309,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
     public void reason()
     {     
             // start delayed profile generation after we have the scene
-            StartCoroutine(SendMessageToGPT("This is the context: \""+sceneprompt+"\"Now, this is the end of the game! have the killer explain their motive and methods for killing in their own words in about 2 sentences or less based on This" + npcPrompts[killer], response =>
+            StartCoroutine(SendMessageToGPT("This is the context: \""+sceneprompt+"\"Now, this is the end of the game! have the killer explain their motive in their own words in 2 sentences or less based on This" + npcPrompts[killer], response =>
             {
                 output2.startDialoge(response);
                 
