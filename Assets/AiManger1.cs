@@ -18,6 +18,7 @@ public class AiManger1 : MonoBehaviour
     public TMP_Text DetectiveBlurb;
     public TextMeshProUGUI explaination;
     public GameObject StartButton;
+    public GameObject wait;
     [Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4.1";
     public string apiKey = "";
@@ -174,8 +175,8 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
             StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple but dont give too much info away just include the victim how they died and the location" + sceneprompt, response =>
             {
                 OpeningBlurb = response;
-                DetectiveBlurb.text = OpeningBlurb; 
-
+                DetectiveBlurb.text = OpeningBlurb;
+                wait.SetActive(true);
 
             }));
             StartCoroutine(DelayedAction());
@@ -438,7 +439,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
                         npcPrompts["Rosa"] = response;
                         output.loading = false;
                         StartButton.SetActive(true);
-                        
+                        wait.SetActive(false);
                     }));
                     break;
 
