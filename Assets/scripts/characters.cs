@@ -8,6 +8,10 @@ public class characters : MonoBehaviour
     public AiManger1 aiManager;
     public TextMeshProUGUI nameText;
     public dialog dialog;
+    bool EFirst = true;
+    bool MFirst = true;
+    bool DFirst = true;
+    bool RFirst = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -40,7 +44,15 @@ public class characters : MonoBehaviour
         hideChildren();
         dialog.loading = true;
         aiManager.message2("Hello, who are you?");
-
+        if (EFirst)
+        {
+            EFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
 
     }
 
@@ -50,7 +62,16 @@ public class characters : MonoBehaviour
         nameText.text = characterName;
         hideChildren();
         dialog.loading = true;
-        aiManager.message2("Hello, who are you?");
+        if (MFirst)
+        {
+            MFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
+
 
     }
     public void Daniel()
@@ -59,7 +80,16 @@ public class characters : MonoBehaviour
         nameText.text = characterName;
         hideChildren();
         dialog.loading = true;
-        aiManager.message2("Hello, who are you?");
+        if (DFirst)
+        {
+            DFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
+
 
     }
     public void Rosa()
@@ -68,7 +98,16 @@ public class characters : MonoBehaviour
         nameText.text = characterName;
         hideChildren();
         dialog.loading = true;
-        aiManager.message2("Hello, who are you?");
+        if (RFirst)
+        {
+            RFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
+
 
     }
 }
