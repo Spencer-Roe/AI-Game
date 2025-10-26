@@ -7,6 +7,7 @@ public class whoDidIt : MonoBehaviour
     public AiManger1 aiManager;
     public TextMeshProUGUI text;
     public GameObject panels;
+    public GameObject restart;
     public string caught;
     public string gotaway;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -36,7 +37,11 @@ public class whoDidIt : MonoBehaviour
         panels.SetActive(true);
 }
 
+    public void hide()
+    {
+        panels.SetActive(false);
 
+    }
     public void Evelyn()
     {
           if(aiManager.killer == "Evelyn")
@@ -50,7 +55,7 @@ public class whoDidIt : MonoBehaviour
             Debug.Log(gotaway);
 
         }
-
+        restart.SetActive(true);
     }
 
     public void Marcus()
@@ -63,6 +68,7 @@ public class whoDidIt : MonoBehaviour
         {
             text.text = "Wrong! Marcus is not the killer, it was " + aiManager.killer + "!";
         }
+        restart.SetActive(true);
 
     }
     public void Daniel()
@@ -75,6 +81,7 @@ public class whoDidIt : MonoBehaviour
         {
             text.text = "Wrong! Daniel is not the killer, it was " + aiManager.killer +"!";
         }
+        restart.SetActive(true);
 
     }
     public void Rosa()
@@ -87,6 +94,7 @@ public class whoDidIt : MonoBehaviour
         {
             text.text = "Wrong! Rosa is not the killer, it was " + aiManager.killer + "!";
         }
+        restart.SetActive(true);
 
     }
 }
