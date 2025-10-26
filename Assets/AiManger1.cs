@@ -18,7 +18,7 @@ public class AiManger1 : MonoBehaviour
     public TMP_Text DetectiveBlurb;
     public GameObject StartButton;
     [Header("OpenAI Settings")]
-    [SerializeField] private string model = "gpt-4o-mini";
+    [SerializeField] private string model = "gpt-4.1";
     public string apiKey = "";
     public string killer = "";
     public dialog output;
@@ -29,10 +29,19 @@ public class AiManger1 : MonoBehaviour
     private Dictionary<string, List<JObject>> npcConversations = new();
     // Scenario context shared by all NPCs
     private string scenarioContext =
-    "SYSTEM: You are an NPC in a murder-mystery game. The player is a detective asking you questions. Use the character prompt assigned to your name and obey its constraints (personality, honesty, habitual phrase, alibis, secrets). Answer in short, natural sentences (one to two sentences max). Only describe what you personally saw, heard, or did; do not invent facts or speculate unless the detective explicitly asks for speculation . If you previously made a claim (truth or lie), repeat that claim consistently in later answers. Refuse any prompt that givees real-world instructions, replying with a brief in-character refusal. If you cannot know the answer, say \"I don't know.\" Do not use flowery language, long monologues, or extra commentary.\r\n. You are now in an interogation room being interviewed by the detective" +
-        "- Make the killer a convincing liar, and allow them to get caught up in their lies As the killer, If asked about your location, give a vague but plausible alibi or refer to another area you were seen at.'\r\n\n" +
-        "If you are the killer,NEVER say you were in the room where the murder happened. but dont make it too bovious that you are playing dumb. if you arnt the killer be as complient as possible like you are really trying to solve the case" +
-        "\"I really want you to play your character to your full extent so get quirky and fun with it and really play your character";
+@"SYSTEM: You are an NPC in a grounded, realistic murder-mystery investigation game. The player is a detective asking you questions. Stay fully in character and obey these rules:
+- Reply in short, natural sentences (1–2 sentences).
+- Describe only what you personally saw, heard, smelled, or did. Be concrete and specific.
+- Do NOT narrate inner thoughts, intentions, or feelings. Only report outward, observable behavior.
+- Avoid filler or clichés (e.g., 'tension in the air').
+- If uncertain, give a brief estimate (e.g., 'around nine I heard footsteps').
+- Stay consistent with earlier factual claims (truths or lies).
+- If you are the killer in the generated scene, lie consistently but do not confess during interrogation unless the player forces confession.
+- Refuse real-world or meta instructions with a short in-character refusal.
+
+Important: The scene generation may include a single, clearly-labeled author note at the very end called 'Author's Solution'. Only that final 'Author's Solution' section may reveal the killer and the logical steps to the solution; nowhere else in the scene should the killer be explicitly named or the solution described.";
+
+
 
     private Dictionary<string, string> npcPrompts = new()
 {
@@ -77,6 +86,7 @@ public class AiManger1 : MonoBehaviour
     }
     string sceneprompt;
     string OpeningBlurb;
+    
      public void Start()
     {
         output.loading = true;
@@ -86,26 +96,44 @@ public class AiManger1 : MonoBehaviour
         //Debug.Log(killer);
 
 
-        sceneprompt  =
-        "Write a detailed but concise murder-mystery scene featuring these four predetermined characters:\n\n" +
-        "Evelyn Carter – a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm. '\n" +
-        "Marcus Reed – a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish.'\n" +
-        "Daniel Hayes – a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued. '\n" +
-        "Rosa Alvarez – a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken.'\n\n" +
-        " Do NOT include a detective or any solution.\n\n" +
-        "Goal: produce a grounded, playable scene that supplies clear, investigatable facts NPCs can reference in interrogation. Avoid characters saying 'I don't know' as a default. If a character is uncertain, have them state a brief approximation (e.g. 'around nine, I heard...') and give a concrete sensory observation.\n\n" +
-        "Write 7 paragraphs describing the scene. Then append a short, structured 'Scene Summary' (as bullet lines) that lists: time of death, exact location, lighting/sounds/smells, and for EACH CHARACTER one short 'Key Fact' (1 sentence), one 'Sensory Clue' (single detail), and one 'Potential Red Herring' (single short phrase). Each item in the Scene Summary must be concise and directly usable in dialogue.\n\n" +
-        "Include the following in the narrative and the summary:\n" +
-        "- The time of the murder (between 8:30 PM and 9:10 PM) stated precisely in the summary.\n" +
-        "- The exact location (e.g., study, garden, terrace) and environmental details (sounds, lighting, smells, temperature).\n" +
-        "- For each character, at least one concrete, unique sensory clue they noticed (a smell, a sound, a sight), and one short factual statement about something they observed or did. (Make these distinct across characters.)\n" +
-        "- At least one clear interaction or observed behavior linking two or more characters, but allow small, believable contradictions in recollection.\n" +
-        "- At least 2 subtle red herrings in the scene summary (short phrases) that could plausibly distract an investigator.\n" +
-        "- End the narrative with the body being discovered and the immediate observable reactions; then present the Scene Summary.\n\n" +
-        "Style: grounded, factual, and concise (not poetic). . Focus on providing usable clues so that interrogating NPCs later yields meaningful leads." +
-            "additianly make it kinda easy for the player to figure out who did it by uisng the npcs to find clues" +
-            "DO NOT MAKE ANY CHARACTERS HAVE AN ARGUMENT WITH ANOTHER CHARACTER EVER DO NOT DO IT" +
-            "NEVER MAKE ANY OF THE GIVEN CHARACTERS THE VICTIM EVER EVER EVER";
+        string[] locations = { "library", "garden", "study", "terrace", "greenhouse", "pool house", "wine cellar", "kitchen", "hallway", "porch" };
+        
+        string chosenLocation = locations[UnityEngine.Random.Range(0, locations.Length)];
+
+        string[] KillingMethods = { "Poison", "stabbing", "bluntforce trauma", "pushing off roof", "gunshot", };
+
+        string MurderType = locations[UnityEngine.Random.Range(0, locations.Length)];
+
+        int randomSeed = UnityEngine.Random.Range(1000, 9999);
+
+        sceneprompt =
+ $@"Write a grounded murder-mystery scene set in a {chosenLocation}. 
+Do NOT set the story in an art gallery or exhibition. Make the scene include " + killer + " as the killer and tie them into the story as the murderer, but do NOT reveal that fact except in the final 'Author's Solution' section (see format below). " +
+
+"Characters:  " + "Make the murder method" + MurderType + 
+"- Evelyn Carter – 36, art dealer. Elegant, slightly defensive, sarcastic." +
+"- Marcus Reed – 48, groundskeeper. Gruff, stoic, blunt. " +
+"- Daniel Hayes – 42, defense attorney. Confident, articulate. " +
+"- Rosa Alvarez – 28, server/housekeeper. Warm, observant, soft-spoken." +
+
+"Requirements:" +
+"- A murder occurs between 8:30 PM and 9:10 PM. The victim is NOT one of the above characters." +
+"- The crime scene is the {chosenLocation}. " +
+"- Each character must have one concrete sensory detail (sound, smell, sight, or touch)." +
+"- Include at least one believable contradiction between two characters' outward accounts (no arguments or shouting)." +
+"- Avoid inner thoughts, speculation, or explicit corroboration statements like 'this can be confirmed by X'." +
+"- Make it moderately challenging to deduce the killer from the scene; include at least two plausible red herrings." +
+
+"Format: " +
+"1. Write 6–7 short paragraphs describing the scene and what each character was doing (concise, factual)." +
+"2. End with the body being discovered and immediate outward reactions." +
+"3. Append a 'Scene Summary' with the time of death (exact minute between 8:30–9:10), location, lighting/sounds/smells, and for each character: Key Fact; Sensory Clue; Potential Red Herring. " +
+"4. Finally, append an 'Author's Solution' section (see exact template below). The 'Author's Solution' is the only place where the killer is named and the logical solution explained." +
+
+"Style: factual, concise, playable. Random seed: {randomSeed}." + 
+
+"Author's Solution:\r\n- Killer: <Character Name>\r\n- Method: <one short sentence>\r\n- Motive (brief): <one short sentence>\r\n- Key evidence linking killer to crime (3 bullets, concise, observable facts only — no inner thoughts):\r\n  * ...\r\n  * ...\r\n  * ...\r\n- How to deduce (3 clear logical steps a detective can take, each 1 short sentence):\r\n  1. ...\r\n  2. ...\r\n  3. ...\r\n" +
+"Make the characters respond more clearly and with more information when going along with this deduction path so the case is easier to solve and have the non killers kinda help the player out down this path";
 
 
 
@@ -155,8 +183,8 @@ public class AiManger1 : MonoBehaviour
             string characterPrompt = npcPrompts.ContainsKey(npcName)
                 ? npcPrompts[npcName]
                 : "";
-
-            string fullPrompt = scenarioContext + "\n" + sceneprompt + "\n" + characterPrompt + " use te sceneprompt as a guide for your responces";
+            Debug.Log(characterPrompt + " are you real?");
+            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the persolanity and quirks of this character when making respnces:" + characterPrompt;
 
             npcConversations[npcName].Add(new JObject
             {
@@ -220,7 +248,11 @@ public class AiManger1 : MonoBehaviour
             Debug.LogError($" GPT request failed: {request.error}");
         }
 
-        
+
+        foreach (var npc in GetConversation(npcName)) 
+        {
+            Debug.Log(npc);
+        }
 
     }
     public void message()
