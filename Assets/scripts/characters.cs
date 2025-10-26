@@ -7,6 +7,10 @@ public class characters : MonoBehaviour
     public string characterName;
     public AiManger1 aiManager;
     public TextMeshProUGUI nameText;
+    bool EFirst = true;
+    bool MFirst = true;
+    bool DFirst = true;
+    bool RFirst = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,7 +30,15 @@ public class characters : MonoBehaviour
 
         characterName = "Evelyn";
         nameText.text = characterName;
-        aiManager.message2("Hello, who are you?");
+        if (EFirst)
+        {
+            EFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else 
+        {
+            aiManager.message2("Hello again");
+        }
 
 
     }
@@ -35,21 +47,45 @@ public class characters : MonoBehaviour
     {
         characterName = "Marcus";
         nameText.text = characterName;
-        aiManager.message2("Hello, who are you?");
+        if (MFirst)
+        {
+            MFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
 
     }
     public void Daniel()
     {
         characterName = "Daniel";
         nameText.text = characterName;
-        aiManager.message2("Hello, who are you?");
+        if (DFirst)
+        {
+            DFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
 
     }
     public void Rosa()
     {
         characterName = "Rosa";
         nameText.text = characterName;
-        aiManager.message2("Hello, who are you?");
+        if (RFirst)
+        {
+            RFirst = false;
+            aiManager.message2("Hello, who are you?");
+        }
+        else
+        {
+            aiManager.message2("Hello again");
+        }
 
     }
 }

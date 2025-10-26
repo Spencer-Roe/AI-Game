@@ -1552,7 +1552,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 32, y: -337.41406}
-  m_SizeDelta: {x: 7.4, y: 0}
+  m_SizeDelta: {x: 7.4, y: -544.4459}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505245661
 MonoBehaviour:
@@ -1906,7 +1906,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 0.8515625
+  orthographic size: 0.7682292
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -2862,7 +2862,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &866814313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4034,7 +4034,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 730.871, y: -98.404}
-  m_SizeDelta: {x: 0, y: 516.072}
+  m_SizeDelta: {x: 516.072, y: 516.072}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213077849
 MonoBehaviour:
