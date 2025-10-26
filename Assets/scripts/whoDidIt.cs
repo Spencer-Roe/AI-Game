@@ -56,6 +56,7 @@ public class whoDidIt : MonoBehaviour
 
         }
         restart.SetActive(true);
+        aiManager.reason();
     }
 
     public void Marcus()
@@ -69,7 +70,7 @@ public class whoDidIt : MonoBehaviour
             text.text = "Wrong! Marcus is not the killer, it was " + aiManager.killer + "!";
         }
         restart.SetActive(true);
-
+        aiManager.reason();
     }
     public void Daniel()
     {
@@ -82,6 +83,7 @@ public class whoDidIt : MonoBehaviour
             text.text = "Wrong! Daniel is not the killer, it was " + aiManager.killer +"!";
         }
         restart.SetActive(true);
+        aiManager.reason();
 
     }
     public void Rosa()
@@ -95,6 +97,7 @@ public class whoDidIt : MonoBehaviour
             text.text = "Wrong! Rosa is not the killer, it was " + aiManager.killer + "!";
         }
         restart.SetActive(true);
+        aiManager.reason();
 
     }
 }

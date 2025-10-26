@@ -16,12 +16,14 @@ using UnityEngine.UI;
 public class AiManger1 : MonoBehaviour
 {
     public TMP_Text DetectiveBlurb;
+    public TextMeshProUGUI explaination;
     public GameObject StartButton;
     [Header("OpenAI Settings")]
     [SerializeField] private string model = "gpt-4.1";
     public string apiKey = "";
     public string killer = "";
     public dialog output;
+    public dialog output2;
     public TMP_InputField inputField;
     private string reply;
     public characters character;
@@ -134,6 +136,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
 "- The crime scene is the {chosenLocation}. " +
 "- Each character must have one concrete sensory detail (sound, smell, sight, or touch)." +
 "- Each character must have a strong, fun, and exagerated personality that abides by their character descriptons, and also talk like how a real human would talk" +
+"- The killer must have an in-character reason for the killing"+
 "- Include at least one believable contradiction between two characters' outward accounts (no arguments or shouting)." +
 "- Avoid inner thoughts, speculation, or explicit corroboration statements like 'this can be confirmed by X'." +
 "- Make it moderately challenging to deduce the killer from the scene; include at least two plausible red herrings." +
@@ -198,7 +201,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
                 ? npcPrompts[npcName]
                 : "";
             Debug.Log(characterPrompt + " are you real?");
-            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the personality and quirks of this character when making responses use the traits and exagerate them greatly and make it fun:" + characterPrompt + "  DONT ramble on for too long  make your responces a max of 3 sentences, remember to exaggerate the characters!";
+            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the personality and quirks of this character when making responses use the traits and exagerate them greatly and make it fun:" + characterPrompt + "  DONT ramble on for too long  make your responces a max of 3 sentences, remember to exaggerate the characters! Also create an in character motivation for the death!";
 
             npcConversations[npcName].Add(new JObject
             {
@@ -302,10 +305,18 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
             ? npcConversations[npcName]
             : new List<JObject>();
     }
+    public void reason()
+    {     
+            // start delayed profile generation after we have the scene
+            StartCoroutine(SendMessageToGPT("This is the end of the game! have the killer explain their motive in their own words in 2 sentences or less", response =>
+            {
+                output2.startDialoge(response);
 
+            }));
+    }
     public IEnumerator SendMessageToGPT(string userMessage, System.Action<string> onResponse)
     {
-        yield return new WaitForSeconds(1f);
+       // yield return new WaitForSeconds(1f);
         if (string.IsNullOrEmpty(apiKey))
         {
             Debug.LogError("API key missing!");
