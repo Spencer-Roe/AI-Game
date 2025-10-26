@@ -6,6 +6,7 @@ public class enter : MonoBehaviour
 {
     public AiManger1 aimanger1;
     public dialog dialog;
+    private bool disabler;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,12 +24,13 @@ public class enter : MonoBehaviour
         else
         {
             EnableAllButtons();
-        }
-        if (Input.GetKeyDown(KeyCode.Return) && dialog.loading == false)
-        {
-            aimanger1.message();
+            if (Input.GetKeyDown(KeyCode.Return) && dialog.loading == false && disabler == false)
+            {
+                aimanger1.message();
 
+            }
         }
+        
         
     }
     public void DisableAllButtons()
@@ -40,7 +42,7 @@ public class enter : MonoBehaviour
         {
             button.interactable = false;
         }
-
+        disabler = true;
 
     }
 
@@ -51,5 +53,6 @@ public class enter : MonoBehaviour
         {
             button.interactable = true;
         }
+        disabler = false;
     }
 }

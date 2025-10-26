@@ -7,10 +7,12 @@ public class characters : MonoBehaviour
     public string characterName;
     public AiManger1 aiManager;
     public TextMeshProUGUI nameText;
+    public dialog dialog;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         characterName = "Evelyn";
+        hideChildren();
 
         nameText.text = characterName;
 
@@ -21,11 +23,22 @@ public class characters : MonoBehaviour
     {
 
     }
+    public void hideChildren()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            this.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        Transform child = transform.Find(characterName);
+        child.gameObject.SetActive(true);
+     }
     public void Evelyn()
     {
 
         characterName = "Evelyn";
         nameText.text = characterName;
+        hideChildren();
+        dialog.loading = true;
         aiManager.message2("Hello, who are you?");
 
 
@@ -35,6 +48,8 @@ public class characters : MonoBehaviour
     {
         characterName = "Marcus";
         nameText.text = characterName;
+        hideChildren();
+        dialog.loading = true;
         aiManager.message2("Hello, who are you?");
 
     }
@@ -42,6 +57,8 @@ public class characters : MonoBehaviour
     {
         characterName = "Daniel";
         nameText.text = characterName;
+        hideChildren();
+        dialog.loading = true;
         aiManager.message2("Hello, who are you?");
 
     }
@@ -49,6 +66,8 @@ public class characters : MonoBehaviour
     {
         characterName = "Rosa";
         nameText.text = characterName;
+        hideChildren();
+        dialog.loading = true;
         aiManager.message2("Hello, who are you?");
 
     }

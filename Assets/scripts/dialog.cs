@@ -9,6 +9,7 @@ public class dialog : MonoBehaviour
     public float speed; 
     private int index;
     public bool loading = false;
+    public enter enter;
     private void Start()
     {
         textcomp.text = string.Empty;
@@ -29,6 +30,7 @@ public class dialog : MonoBehaviour
             yield return new WaitForSeconds(speed);
 
         }
+        enter.EnableAllButtons();
         loading = false;
     }
 
