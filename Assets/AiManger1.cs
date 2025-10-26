@@ -133,6 +133,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
 "- A murder occurs between 8:30 PM and 9:10 PM. The victim is NOT one of the above characters." +
 "- The crime scene is the {chosenLocation}. " +
 "- Each character must have one concrete sensory detail (sound, smell, sight, or touch)." +
+"- Each character must have a strong, fun, and exagerated personality that abides by their character descriptons, and also talk like how a real human would talk" +
 "- Include at least one believable contradiction between two characters' outward accounts (no arguments or shouting)." +
 "- Avoid inner thoughts, speculation, or explicit corroboration statements like 'this can be confirmed by X'." +
 "- Make it moderately challenging to deduce the killer from the scene; include at least two plausible red herrings." +
@@ -197,7 +198,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
                 ? npcPrompts[npcName]
                 : "";
             Debug.Log(characterPrompt + " are you real?");
-            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the persolanity and quirks of this character when making respnces use the teaits and exagerate them greatly and make it fun:" + characterPrompt + "  DONT ramble on for too long  make your responces a max of 3 sentences";
+            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the personality and quirks of this character when making responses use the traits and exagerate them greatly and make it fun:" + characterPrompt + "  DONT ramble on for too long  make your responces a max of 3 sentences, remember to exaggerate the characters!";
 
             npcConversations[npcName].Add(new JObject
             {

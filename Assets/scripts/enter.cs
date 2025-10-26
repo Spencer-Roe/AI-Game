@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.UI;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 public class enter : MonoBehaviour
 {
     public AiManger1 aimanger1;
@@ -24,7 +25,7 @@ public class enter : MonoBehaviour
         else
         {
             EnableAllButtons();
-            if (Input.GetKeyDown(KeyCode.Return) && dialog.loading == false && disabler == false)
+            if (Input.GetKeyDown(KeyCode.Return) && dialog.loading == false && disabler == false && dialog.isTalking == false)
             {
                 aimanger1.message();
 
@@ -32,6 +33,10 @@ public class enter : MonoBehaviour
         }
         
         
+    }
+    public void restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     public void DisableAllButtons()
     {
