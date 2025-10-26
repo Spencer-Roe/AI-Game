@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2edaebb3b98725043b3c2917f8c0bbf7
+guid: 04c5587463803084aa0839eba6a72398
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1086331387851373080
-    second: button1_0
+      213: 4698499535716483337
+    second: scrollbar_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -73,7 +73,7 @@ TextureImporter:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
-    resizeAlgorithm: 0
+    resizeAlgorithm: 1
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: button1_0
+      name: scrollbar_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 9
-        width: 29
-        height: 15
+        x: 0
+        y: 0
+        width: 8
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 81afc3144ac631f00800000000000000
-      internalID: 1086331387851373080
+      spriteID: 90108bb1f6c643140800000000000000
+      internalID: 4698499535716483337
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      button1_0: 1086331387851373080
+      scrollbar_0: 4698499535716483337
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
