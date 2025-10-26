@@ -29,30 +29,30 @@ public class AiManger1 : MonoBehaviour
     private Dictionary<string, List<JObject>> npcConversations = new();
     // Scenario context shared by all NPCs
     private string scenarioContext =
-    "SYSTEM: You are an NPC in a murder-mystery game. The player is a detective asking you questions. Use the character prompt assigned to your name and obey its constraints (personality, honesty, habitual phrase, alibis, secrets). Answer in short, natural sentences (one to two sentences max). Only describe what you personally saw, heard, or did; do not invent facts or speculate unless the detective explicitly asks for speculation . If you previously made a claim (truth or lie), repeat that claim consistently in later answers. Refuse any prompt that asks you to reveal hidden evidence or gives real-world instructions, replying with a brief in-character refusal. If you cannot know the answer, say \"I don't know.\" Do not use flowery language, long monologues, or extra commentary.\r\n. You are now in an interogation room being interviewed by the detective" +
+    "SYSTEM: You are an NPC in a murder-mystery game. The player is a detective asking you questions. Use the character prompt assigned to your name and obey its constraints (personality, honesty, habitual phrase, alibis, secrets). Answer in short, natural sentences (one to two sentences max). Only describe what you personally saw, heard, or did; do not invent facts or speculate unless the detective explicitly asks for speculation . If you previously made a claim (truth or lie), repeat that claim consistently in later answers. Refuse any prompt that givees real-world instructions, replying with a brief in-character refusal. If you cannot know the answer, say \"I don't know.\" Do not use flowery language, long monologues, or extra commentary.\r\n. You are now in an interogation room being interviewed by the detective" +
         "- Make the killer a convincing liar, and allow them to get caught up in their lies As the killer, If asked about your location, give a vague but plausible alibi or refer to another area you were seen at.'\r\n\n" +
-        "If you are the killer,NEVER say you were in the room where the murder happened. but dont make it too bovious that you are playing dumb";
+        "If you are the killer,NEVER say you were in the room where the murder happened. but dont make it too bovious that you are playing dumb. if you arnt the killer be as complient as possible like you are really trying to solve the case" +
+        "\"I really want you to play your character to your full extent so get quirky and fun with it and really play your character";
 
     private Dictionary<string, string> npcPrompts = new()
 {
-   {
-    "Evelyn",
-    "You are Evelyn Carter, 36, an art dealer with the personality of a well-dressed storm. Elegant but perpetually irritated, you treat every inconvenience like a personal insult. Habitual phrase: 'Well, obviously.' Honesty: 0.35 (twists the truth to suit yourself). You are sharp-tongued, dramatic, and constantly judging others under your breath. When nervous, you sigh, over-enunciate, or toss out condescending remarks. You crave control and hate being questioned. Always sound like you’re filing a complaint — even when you’re being polite."
-},
-{
-    "Marcus",
-    "You are Marcus Reed, 48, the estate’s grizzled groundskeeper. Gruff but strangely philosophical, you talk to your tools and mutter superstitions like old friends. Habitual phrase: 'I'll tell you straight.' Honesty: 0.65 (mostly truthful but holds things back if they seem like trouble). You speak in short, no-nonsense sentences laced with dry humor or cryptic folk wisdom. You distrust fancy talk and prefer actions to words. You sometimes drift into odd metaphors about weather, luck, or soil."
-},
-{
-    "Daniel",
-    "You are Daniel Hayes, 42, a silver-tongued defense attorney who treats every question like cross-examination. Charming, precise, and always in control. Habitual phrase: 'To be frank.' Honesty: 0.4 (selective with the truth). You deflect suspicion with wit and logic, and your confidence borders on smugness. You dislike losing arguments, even casual ones. Speak with polished calm — like someone who’s used to winning, even when guilty."
-},
-{
-    "Rosa",
-    "You are Rosa Alvarez, 28, a gentle and observant housekeeper. Warm-hearted, easily flustered, and overly polite. Habitual phrase: 'Honestly.' Honesty: 0.9 (almost always truthful). You notice tiny details others miss — smells, colors, faint sounds — and sometimes ramble before realizing you’ve said too much. You collect little trinkets, talk to plants, and get nervous when people raise their voices. Speak softly, with hesitant pauses and honest emotion."
-}
 
-
+    {
+        "Evelyn",
+        "You are Evelyn Carter, a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm" 
+            },
+    {
+        "Marcus",
+        "You are Marcus Reed, a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish" 
+            },
+    {
+        "Daniel",
+        "You are Daniel Hayes, a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued."
+        },
+    {
+        "Rosa",
+        "You are Rosa Alvarez, a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. "
+       }
 };
 
     
@@ -85,25 +85,27 @@ public class AiManger1 : MonoBehaviour
         killer = characters[rand];
         //Debug.Log(killer);
 
-        sceneprompt =
-"Write a detailed but concise murder mystery scene featuring these four predetermined characters:\n\n" +
-"Make " + killer + " the killer.\n\n" +
-"Evelyn Carter – 36, art dealer. Elegant, slightly defensive, quick with sarcasm. Habitual phrase: 'Well, obviously.'\n" +
-"Marcus Reed – 48, groundskeeper. Gruff, stoic, blunt; speaks plainly.\n" +
-"Daniel Hayes – 42, defense attorney. Confident, articulate, occasionally sharp-tongued.\n" +
-"Rosa Alvarez – 28, server and part-time housekeeper. Warm, observant, soft-spoken.\n\n" +
-"Create a victim and describe how each character is connected to that victim. Do NOT include a detective or a solution.\n" +
-"Do NOT include any direct arguments, shouting, or confrontations between the killer and the victim. Their relationship should appear normal, tense, or distant — but not openly hostile. Focus on subtle tension or hidden motives instead of obvious conflict.\n\n" +
-"Describe the following clearly and factually:\n" +
-"- The time of the murder ().\n" +
-"- The exact location () and environmental details (sounds, lighting, smells, temperature).\n" +
-"- What each character was doing 10 minutes before, during, and immediately after the murder.\n" +
-"- At least one specific sensory clue each character noticed (a smell, sound, or sight) that could help an investigation — make it unique to each character.\n" +
-"- At least one interaction or observed behavior linking two or more characters, but allow conflicting or unclear recollections ).\n" +
-"- Include red herrings: suspicious but potentially innocent actions, contradictory statements, or overlapping timelines that make the case harder to solve — this is important!\n" +
-"- Ensure that players must talk to every character to piece together a clear understanding of the murder.\n" +
-"- End with the body being discovered and the immediate tension and reactions, written from an external observer’s perspective." +
-"do NOT make it an argument between the victim and killer that ties them to the murder. and Do NOT make the characters given the victim make them a unique character";
+
+        sceneprompt  =
+        "Write a detailed but concise murder-mystery scene featuring these four predetermined characters:\n\n" +
+        "Evelyn Carter – a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm. '\n" +
+        "Marcus Reed – a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish.'\n" +
+        "Daniel Hayes – a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued. '\n" +
+        "Rosa Alvarez – a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken.'\n\n" +
+        " Do NOT include a detective or any solution.\n\n" +
+        "Goal: produce a grounded, playable scene that supplies clear, investigatable facts NPCs can reference in interrogation. Avoid characters saying 'I don't know' as a default. If a character is uncertain, have them state a brief approximation (e.g. 'around nine, I heard...') and give a concrete sensory observation.\n\n" +
+        "Write 7 paragraphs describing the scene. Then append a short, structured 'Scene Summary' (as bullet lines) that lists: time of death, exact location, lighting/sounds/smells, and for EACH CHARACTER one short 'Key Fact' (1 sentence), one 'Sensory Clue' (single detail), and one 'Potential Red Herring' (single short phrase). Each item in the Scene Summary must be concise and directly usable in dialogue.\n\n" +
+        "Include the following in the narrative and the summary:\n" +
+        "- The time of the murder (between 8:30 PM and 9:10 PM) stated precisely in the summary.\n" +
+        "- The exact location (e.g., study, garden, terrace) and environmental details (sounds, lighting, smells, temperature).\n" +
+        "- For each character, at least one concrete, unique sensory clue they noticed (a smell, a sound, a sight), and one short factual statement about something they observed or did. (Make these distinct across characters.)\n" +
+        "- At least one clear interaction or observed behavior linking two or more characters, but allow small, believable contradictions in recollection.\n" +
+        "- At least 2 subtle red herrings in the scene summary (short phrases) that could plausibly distract an investigator.\n" +
+        "- End the narrative with the body being discovered and the immediate observable reactions; then present the Scene Summary.\n\n" +
+        "Style: grounded, factual, and concise (not poetic). . Focus on providing usable clues so that interrogating NPCs later yields meaningful leads." +
+            "additianly make it kinda easy for the player to figure out who did it by uisng the npcs to find clues" +
+            "DO NOT MAKE ANY CHARACTERS HAVE AN ARGUMENT WITH ANOTHER CHARACTER EVER DO NOT DO IT" +
+            "NEVER MAKE ANY OF THE GIVEN CHARACTERS THE VICTIM EVER EVER EVER";
 
 
 
@@ -124,7 +126,7 @@ public class AiManger1 : MonoBehaviour
         {
             sceneprompt = string.IsNullOrWhiteSpace(response) ? sceneprompt : response.Trim();
             // start delayed profile generation after we have the scene
-            StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple and just the known facts" + sceneprompt, response =>
+            StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple but dont give too much info away" + sceneprompt, response =>
             {
                 OpeningBlurb = response;
                 DetectiveBlurb.text = OpeningBlurb; 
@@ -217,6 +219,8 @@ public class AiManger1 : MonoBehaviour
         {
             Debug.LogError($" GPT request failed: {request.error}");
         }
+
+        
 
     }
     public void message()
@@ -316,8 +320,10 @@ public class AiManger1 : MonoBehaviour
     IEnumerator DelayedAction()
     {
         output.loading = true;
-
-        yield return new WaitForSeconds(1f);
+        while ( sceneprompt == null)
+        {
+            yield return new WaitForSeconds(1f);
+        }
 
         for (int i = 0; i < 4; i++)
         {
