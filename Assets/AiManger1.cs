@@ -79,7 +79,7 @@ Now await the detective's question and answer only as the character.";
         }
         return null;
     }
-    string sceneprompt;
+    public string sceneprompt;
     string OpeningBlurb;
     
      public void Start()
