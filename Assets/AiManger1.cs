@@ -29,10 +29,9 @@ public class AiManger1 : MonoBehaviour
     private Dictionary<string, List<JObject>> npcConversations = new();
     // Scenario context shared by all NPCs
     private string scenarioContext =
-@"SYSTEM: You are an NPC in a grounded, realistic murder-mystery investigation game. The player is a detective asking you questions. Stay fully in character and obey these rules:
+@"SYSTEM: You are an NPC in a fun murder-mystery investigation game. The player is a detective asking you questions. Stay fully in character and obey these rules:
 - Reply in short, natural sentences (1–2 sentences).
-- Describe only what you personally saw, heard, smelled, or did. Be concrete and specific.
-- Do NOT narrate inner thoughts, intentions, or feelings. Only report outward, observable behavior.
+- Describe only what you personally saw, heard, smelled, or did. Be specific.
 - Avoid filler or clichés (e.g., 'tension in the air').
 - If uncertain, give a brief estimate (e.g., 'around nine I heard footsteps').
 - Stay consistent with earlier factual claims (truths or lies).
@@ -48,19 +47,19 @@ Important: The scene generation may include a single, clearly-labeled author not
 
     {
         "Evelyn",
-        "You are Evelyn Carter, a 36-year-old art dealer. Elegant, slightly defensive, quick with sarcasm" 
+        "You are Evelyn Carter, a 36-year-old art dealer. Elegant, very defensive, quick with sarcasm, rude almost karen like, doesnt like being called a liar, very very rude" 
             },
     {
         "Marcus",
-        "You are Marcus Reed, a 48-year-old groundskeeper. Gruff, stoic, blunt; speaks plainly and without flourish" 
+        "You are Marcus Reed, a 86-year-old retired war verterin. Gruff, stoic, blunt; speaks plainly and without flourish, often compares things to the war, very kind and is there to help in any way he can" 
             },
     {
         "Daniel",
-        "You are Daniel Hayes, a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued."
+        "You are Daniel Hayes, a 42-year-old defense attorney. Confident, articulate, occasionally sharp-tongued, likes to alwasy assume he is in a court case, brings up random court rules and procedure all the time"
         },
     {
         "Rosa",
-        "You are Rosa Alvarez, a 28-year-old server and part-time housekeeper. Warm, observant, soft-spoken. "
+        "You are Rosa Alvarez, a 18-year-old server intern housekeeper. nervious, observant, soft-spoken. is constantly scared and shaken up by the whole thing, cries a lot and is very scared all the time "
        }
 };
 
@@ -96,8 +95,26 @@ Important: The scene generation may include a single, clearly-labeled author not
         //Debug.Log(killer);
 
 
-        string[] locations = { "library", "garden", "study", "terrace", "greenhouse", "pool house", "wine cellar", "kitchen", "hallway", "porch" };
-        
+        string[] locations = {
+    "Victorian manor with multiple wings and a grand staircase",
+    "seaside estate overlooking the cliffs",
+    "country farmhouse with adjoining barn and cellar",
+    "mountain lodge surrounded by pine forest",
+    "suburban two-story home with basement and attic",
+    "city townhouse with connected study and rooftop terrace",
+    "abandoned mansion with dusty corridors and broken chandeliers",
+    "modern lake house with large glass windows and private dock",
+    "old monastery converted into a residence",
+    "remote hunting cabin with nearby shed and tools",
+    "luxury penthouse apartment spanning two floors",
+    "vineyard estate with a wine cellar and outdoor patio",
+    "riverside villa with garden and pool house",
+    "country inn with guest rooms and dining hall",
+    "old boarding school repurposed as a private residence",
+    "mountain chalet with ski storage and large fireplace hall"
+};
+
+
         string chosenLocation = locations[UnityEngine.Random.Range(0, locations.Length)];
 
         string[] KillingMethods = { "Poison", "stabbing", "bluntforce trauma", "pushing off roof", "gunshot", };
@@ -110,11 +127,11 @@ Important: The scene generation may include a single, clearly-labeled author not
  $@"Write a grounded murder-mystery scene set in a {chosenLocation}. 
 Do NOT set the story in an art gallery or exhibition. Make the scene include " + killer + " as the killer and tie them into the story as the murderer, but do NOT reveal that fact except in the final 'Author's Solution' section (see format below). " +
 
-"Characters:  " + "Make the murder method" + MurderType + 
-"- Evelyn Carter – 36, art dealer. Elegant, slightly defensive, sarcastic." +
-"- Marcus Reed – 48, groundskeeper. Gruff, stoic, blunt. " +
-"- Daniel Hayes – 42, defense attorney. Confident, articulate. " +
-"- Rosa Alvarez – 28, server/housekeeper. Warm, observant, soft-spoken." +
+"Characters:  " + "Make the murder method" + MurderType +
+"- Evelyn Carter – 36, art dealer.  Elegant, very defensive, quick with sarcasm, rude almost karen like, doesnt like being called a liar, very very rude" +
+"- Marcus Reed – 86-year-old retired war verterin. Gruff, stoic, blunt; speaks plainly and without flourish, often compares things to the war, very kind and is there to help in any way he can" +
+"- Daniel Hayes – 42-year-old defense attorney. Confident, articulate,  sharp-tongued, likes to alwasy assume he is in a court case, brings up random court rules and procedure all the time" +
+"- Rosa Alvarez – 18-year-old server intern housekeeper. nervious, observant, soft-spoken. is constantly scared and shaken up by the whole thing, cries a lot and is very scared all the time " +
 
 "Requirements:" +
 "- A murder occurs between 8:30 PM and 9:10 PM. The victim is NOT one of the above characters." +
@@ -154,7 +171,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
         {
             sceneprompt = string.IsNullOrWhiteSpace(response) ? sceneprompt : response.Trim();
             // start delayed profile generation after we have the scene
-            StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple but dont give too much info away" + sceneprompt, response =>
+            StartCoroutine(SendMessageToGPT("Create a quick 2-3 sentence blurb describing the scene as would be described to a detective that just got the case keep it simple but dont give too much info away just include the victim how they died and the location" + sceneprompt, response =>
             {
                 OpeningBlurb = response;
                 DetectiveBlurb.text = OpeningBlurb; 
@@ -184,7 +201,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
                 ? npcPrompts[npcName]
                 : "";
             Debug.Log(characterPrompt + " are you real?");
-            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the persolanity and quirks of this character when making respnces:" + characterPrompt;
+            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the persolanity and quirks of this character when making respnces use the teaits and exagerate them greatly and make it fun:" + characterPrompt;
 
             npcConversations[npcName].Add(new JObject
             {
@@ -259,6 +276,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
     {
 
         StartCoroutine(SendNPCMessage(character.characterName, inputField.text));
+        inputField.text = string.Empty;
     }
     public void message2(string input)
     {
