@@ -44,7 +44,7 @@ public class characters : MonoBehaviour
         nameText.text = characterName;
         hideChildren();
         dialog.loading = true;
-        aiManager.message2("Hello, who are you?");
+        
         if (EFirst)
         {
             EFirst = false;
