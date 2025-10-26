@@ -1160,7 +1160,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 32, y: -337.41406}
-  m_SizeDelta: {x: 7.4, y: -544.73584}
+  m_SizeDelta: {x: 7.4, y: -544.19434}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505245661
 MonoBehaviour:
@@ -1923,7 +1923,6 @@ RectTransform:
   - {fileID: 147904054}
   - {fileID: 279814113}
   - {fileID: 2033385599}
-  - {fileID: 822779189}
   m_Father: {fileID: 866814316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2268,7 +2267,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &822779189
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2282,11 +2281,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1881733760}
-  m_Father: {fileID: 756165732}
+  m_Father: {fileID: 866814316}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -0.000061035156, y: 73.15695}
+  m_AnchoredPosition: {x: -0.000061035156, y: 79.15696}
   m_SizeDelta: {x: 214.9403, y: 107.5268}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &822779190
@@ -2576,6 +2575,7 @@ RectTransform:
   - {fileID: 1697443218}
   - {fileID: 505245660}
   - {fileID: 756165732}
+  - {fileID: 822779189}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2737,7 +2737,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &947092217
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4108,6 +4108,7 @@ GameObject:
   - component: {fileID: 1357132313}
   - component: {fileID: 1357132312}
   - component: {fileID: 1357132311}
+  - component: {fileID: 1357132314}
   m_Layer: 0
   m_Name: SFX
   m_TagString: Untagged
@@ -4151,6 +4152,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1357132314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357132310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23515abe8cd67574bab6ab0341dd6a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterSFXManager
+  characterSounds:
+  - characterName: Evelyn
+    sfx: {fileID: 8300000, guid: 9faeb07dd94b6d04ca64e1e901cabb24, type: 3}
+  - characterName: Marcus
+    sfx: {fileID: 8300000, guid: 193294a9ec779464396f6f3112a8ba8b, type: 3}
+  - characterName: Daniel
+    sfx: {fileID: 8300000, guid: 5ed2f9813ddc49846bd07ea27752a011, type: 3}
+  - characterName: Rosa
+    sfx: {fileID: 8300000, guid: 01f1e6244109a5b408794cd9427630bb, type: 3}
 --- !u!1 &1456859141
 GameObject:
   m_ObjectHideFlags: 0

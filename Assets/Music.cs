@@ -20,6 +20,7 @@ public class Music : MonoBehaviour
         audioSource.clip = backgroundMusic;
         audioSource.loop = true;
         audioSource.playOnAwake = true;
+        audioSource.volume = 0.5f;
         audioSource.Play();
     }
 }

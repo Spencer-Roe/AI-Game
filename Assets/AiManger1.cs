@@ -274,11 +274,13 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
 
         StartCoroutine(SendNPCMessage(character.characterName, inputField.text));
         inputField.text = string.Empty;
+        FindObjectOfType<CharacterSFXManager>().PlayCharacterSFX(character.characterName);
     }
     public void message2(string input)
     {
 
         StartCoroutine(SendNPCMessage(character.characterName, input));
+        FindObjectOfType<CharacterSFXManager>().PlayCharacterSFX(character.characterName);
     }
     /// <summary>
     /// Clears conversation history for one or all NPCs.
