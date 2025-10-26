@@ -10,6 +10,7 @@ public class dialog : MonoBehaviour
     private int index;
     public bool loading = false;
     public enter enter;
+    public bool isTalking = false;
     private void Start()
     {
         textcomp.text = string.Empty;
@@ -24,6 +25,7 @@ public class dialog : MonoBehaviour
     IEnumerator TypeLine()
     {
        loading = true;
+        isTalking = true;
         foreach (char c in lines.ToCharArray())
         {
             textcomp.text += c;
@@ -31,6 +33,7 @@ public class dialog : MonoBehaviour
 
         }
         enter.EnableAllButtons();
+        isTalking = false;
         loading = false;
     }
 

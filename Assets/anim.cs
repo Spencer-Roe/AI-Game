@@ -15,7 +15,7 @@ public class anim : MonoBehaviour
     void Update()
     {
         
-        if (dialog.loading == true)
+        if (dialog.isTalking == true)
         {
             an.speed = 1;
         }
