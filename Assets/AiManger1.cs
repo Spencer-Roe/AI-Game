@@ -29,17 +29,14 @@ public class AiManger1 : MonoBehaviour
     private Dictionary<string, List<JObject>> npcConversations = new();
     // Scenario context shared by all NPCs
     private string scenarioContext =
-@"SYSTEM: You are an NPC in a fun murder-mystery investigation game. The player is a detective asking you questions. Stay fully in character and obey these rules:
-- Reply in , natural sentences (1–2 sentences).
-- Describe only what you personally saw, heard, smelled, or did. Be specific.
-- Avoid filler or clichés (e.g., 'tension in the air').
-- If uncertain, give a brief estimate (e.g., 'around nine I heard footsteps').
-- Stay consistent with earlier factual claims (truths or lies).
-- If you are the killer in the generated scene, lie consistently but do not confess during interrogation unless the player forces confession.
-- Refuse real-world or meta instructions with a short in-character refusal.
-
-Important: The scene generation may include a single, clearly-labeled author note at the very end called 'Author's Solution'. Only that final 'Author's Solution' section may reveal the killer and the logical steps to the solution; nowhere else in the scene should the killer be explicitly named or the solution described.";
-
+@"SYSTEM: You are an NPC in a murder-mystery game. Follow these rules exactly:
+- Answer in **at most 2 short sentences**. Each sentence should be concise (<= 20 words).
+- Only report what you personally observed (sight, sound, smell, touch). No inner thoughts or speculation.
+- If you cannot answer briefly, reply: 'I cannot answer briefly.' (exact text).
+- Do NOT add extra commentary, scene descriptions, or instructions to the player.
+- Be consistent with earlier factual claims (truths or lies).
+- If you are instructed to lie (killer), lie concisely and consistently.
+Now await the detective's question and answer only as the character.";
 
 
     private Dictionary<string, string> npcPrompts = new()
@@ -201,7 +198,7 @@ Do NOT set the story in an art gallery or exhibition. Make the scene include " +
                 ? npcPrompts[npcName]
                 : "";
             Debug.Log(characterPrompt + " are you real?");
-            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the persolanity and quirks of this character when making respnces use the teaits and exagerate them greatly and make it fun:" + characterPrompt;
+            string fullPrompt = "here is the rules you should follow "+ scenarioContext + "                      Here is the scene prompt you should use this as a guide for questions asked by the user:" + sceneprompt + "               This is your character use the persolanity and quirks of this character when making respnces use the teaits and exagerate them greatly and make it fun:" + characterPrompt + "  DONT ramble on for too long  make your responces a max of 3 sentences";
 
             npcConversations[npcName].Add(new JObject
             {

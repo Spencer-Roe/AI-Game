@@ -19,7 +19,8 @@ public class characters : MonoBehaviour
         hideChildren();
 
         nameText.text = characterName;
-
+        
+    
     }
 
     // Update is called once per frame
